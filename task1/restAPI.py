@@ -23,8 +23,8 @@ class RestAPI:
 
     def addUser(self, payload):
         for user in self.users:
-                if payload["user"] == user['name']:
-                    return {'error': "User already exsits"}
+            if payload["user"] == user['name']:
+                return {'error': "User already exsits"}
 
         user_object = {
                 "name": payload["user"],
