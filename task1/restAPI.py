@@ -20,21 +20,25 @@ class RestAPI:
         else:
             return {'error': "Not Found"}
 
-    
-    def post(self, url, payload):
-        if "/add" in url:
-            for user in self.users:
+
+    def addUser(self, payload):
+        for user in self.users:
                 if payload["user"] == user['name']:
                     return {'error': "User already exsits"}
 
-            user_object = {
+        user_object = {
                 "name": payload["user"],
                 "owes": {},
                 "owed_by": {},
                 "balance": 0
             }
-            self.users.append(user_object)
-            return {'user': user_object}
+        self.users.append(user_object)
+        return {'user': user_object}
+
+    
+    def post(self, url, payload):
+        if "/add" in url:
+            return self.addUser(self, payload)
         
         if "/iou" in url:
             lender = payload["lender"]
@@ -77,7 +81,7 @@ class RestAPI:
                     borrower_object["owes"][lender] = borrower_object["owes"][lender] + amount
                 else:
                     borrower_object["owes"][lender] = amount
-                    
+
             # Update the self.users
             for user in self.users:
                 if user["name"] in [lender, borrower]:
